@@ -80,7 +80,8 @@ print_partition(const char *devname, const struct disklabel *dl, int i, int last
 	int j;
 
 	if (DL_GETPSIZE(pp)) {
-		printf("\n%c-- %s%c\t", last ? '`' : '|', devname,
+		printf("\n%c-- %s%s%c\t", last ? '`' : '|',devname,
+		    isduid(devname, OPENDEV_PART) ? "." : "",
 		    DL_PARTNUM2NAME(i));
 		    
 		if (human) {
@@ -120,9 +121,11 @@ print_device(char *devname, int human)
 		err(1, "%s: ioctl(DIOCGDINFO)", __func__);
 
 	printf("%s:", devname);
-	printf("%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx",
-	    dl.d_uid[0], dl.d_uid[1], dl.d_uid[2], dl.d_uid[3],
-	    dl.d_uid[4], dl.d_uid[5], dl.d_uid[6], dl.d_uid[7]);
+	if (!isduid(devname, OPENDEV_PART)) {
+		printf("%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx",
+		    dl.d_uid[0], dl.d_uid[1], dl.d_uid[2], dl.d_uid[3],
+		    dl.d_uid[4], dl.d_uid[5], dl.d_uid[6], dl.d_uid[7]);
+	}
 	printf(" [%s %s]", di.vendor, di.product);
 
 	last_i = -1;
