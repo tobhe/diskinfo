@@ -157,15 +157,15 @@ main(int argc, char *argv[])
 	if ((mntsize = getmntinfo(&mntbuf, MNT_WAIT)) == 0)
 		err(1, "%s: getmntinfo", __func__);
 
-	if (argc == 1 && argv[0] != NULL) {
-		print_device(argv[0], human);
-		return 0;
-	}
-
 	if (human) {
 		printf("DISK     \t  TOTAL\t  FSTYPE\tMOUNT\n");
 	} else {
 		printf("DISK     \t            TOTAL\t  FSTYPE\tMOUNT\n");
+	}
+
+	if (argc == 1 && argv[0] != NULL) {
+		print_device(argv[0], human);
+		return 0;
 	}
 
 	/* Print all of those disks*/
