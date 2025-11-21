@@ -163,7 +163,7 @@ main(int argc, char *argv[])
 	if (human) {
 		printf("DISK     \t  TOTAL\t  FSTYPE\tMOUNT\n");
 	} else {
-		printf("DISK     \t            TOTAL\t  FSTYPE\tMOUNT\n");
+		printf("DISK     \t           TOTAL\t  FSTYPE\tMOUNT\n");
 	}
 
 	if (argc == 1 && argv[0] != NULL) {
