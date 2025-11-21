@@ -70,7 +70,8 @@ sysctl_disknames_get(void)
 }
 
 static void
-print_partition(const char *devname, const struct disklabel *dl, int i, int human)
+print_partition(const char *devname, const struct disklabel *dl, int i, int last,
+    int human)
 {
 	const struct partition *pp = &dl->d_partitions[i];
 	char sbuf[FMT_SCALED_STRSIZE];
@@ -79,7 +80,9 @@ print_partition(const char *devname, const struct disklabel *dl, int i, int huma
 	int j;
 
 	if (DL_GETPSIZE(pp)) {
-		printf("\n|-- %s%c\t", devname, DL_PARTNUM2NAME(i));
+		printf("\n%c-- %s%c\t", last ? '`' : '|', devname,
+		    DL_PARTNUM2NAME(i));
+		    
 		if (human) {
 			if(fmt_scaled(DL_GETPSIZE(pp) * dl->d_secsize, sbuf) == -1)
 				err(1, "%s: fmt_scaled()", __func__);
@@ -104,7 +107,7 @@ print_device(char *devname, int human)
 	struct dk_inquiry di;
 	struct disklabel dl;
 	int dev;
-	int i;
+	int i, last_i;
 
 	/* Only root is allowed to do this */
 	dev = opendev(devname, O_RDONLY, OPENDEV_PART, NULL);
@@ -122,8 +125,13 @@ print_device(char *devname, int human)
 	    dl.d_uid[4], dl.d_uid[5], dl.d_uid[6], dl.d_uid[7]);
 	printf(" [%s %s]", di.vendor, di.product);
 
+	last_i = -1;
 	for (i = 0; i < dl.d_npartitions; i++)
-		print_partition(devname, &dl, i, human);
+		if (DL_GETPSIZE(&dl.d_partitions[i]))
+			last_i = i;
+	
+	for (i = 0; i < dl.d_npartitions; i++)
+		print_partition(devname, &dl, i, i == last_i, human);
 	printf("\n\n");
 }
 
