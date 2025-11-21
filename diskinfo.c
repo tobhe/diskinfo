@@ -109,7 +109,7 @@ print_device(char *devname, int human)
 	/* Only root is allowed to do this */
 	dev = opendev(devname, O_RDONLY, OPENDEV_PART, NULL);
 	if (dev == -1)
-		err(1, "%s: opendev", __func__);
+		err(1, "failed to open %s",devname);
 
 	if (ioctl(dev, DIOCINQ, &di) == -1)
 		err(1, "%s: ioctl(DIOCINQ)", __func__);
