@@ -106,7 +106,6 @@ print_device(char *devname, int human)
 {
 	struct dk_inquiry di;
 	struct disklabel dl;
-	char sbuf[FMT_SCALED_STRSIZE];
 	int dev;
 	int i;
 
@@ -120,20 +119,11 @@ print_device(char *devname, int human)
 	if (ioctl(dev, DIOCGDINFO, &dl) == -1)
 		err(1, "%s: ioctl(DIOCGDINFO)", __func__);
 
-	printf("[%s %s]: ", di.vendor, di.product);
-	printf("%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx\n",
+	printf("%s:", devname);
+	printf("%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx",
 	    dl.d_uid[0], dl.d_uid[1], dl.d_uid[2], dl.d_uid[3],
 	    dl.d_uid[4], dl.d_uid[5], dl.d_uid[6], dl.d_uid[7]);
-	printf("%-8s\t", devname);
-
-	if (human) {
-		if(fmt_scaled(DL_GETDSIZE(&dl) * dl.d_secsize, sbuf) == -1)
-			err(1, "%s: fmt_scaled()", __func__);
-		printf("%7s", sbuf);
-	} else {
-		/* Size in blocks */
-		printf("%16llu", DL_GETDSIZE(&dl));
-	}
+	printf(" [%s %s]", di.vendor, di.product);
 
 	for (i = 0; i < dl.d_npartitions; i++)
 		print_partition(devname, &dl, i, human);
@@ -169,9 +159,9 @@ main(int argc, char *argv[])
 	}
 
 	if (human) {
-		printf("DISK     \t   SIZE\t  FSTYPE\tMOUNT\n");
+		printf("DISK     \t   TOTAL\t  FSTYPE\tMOUNT\n");
 	} else {
-		printf("DISK     \t            SIZE\t  FSTYPE\tMOUNT\n");
+		printf("DISK     \t            TOTAL\t  FSTYPE\tMOUNT\n");
 	}
 
 	/* Print all of those disks*/
@@ -182,9 +172,6 @@ main(int argc, char *argv[])
 			errx(1, "%s: strsep", __func__);
 
 		print_device(p, human);
-
-#if 0
-#endif
 	}
 
 	return 0;
