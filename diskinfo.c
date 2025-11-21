@@ -35,7 +35,6 @@
 #define GIG(x)  (MEG(x) * 1024LL)
 
 struct statfs *mntbuf;
-int mntidx;
 int mntsize;
 
 static void
@@ -77,6 +76,7 @@ print_partition(const char *devname, const struct disklabel *dl, int i, int huma
 	char sbuf[FMT_SCALED_STRSIZE];
 	int dplen;
 	char *dp;
+	int j;
 
 	if (DL_GETPSIZE(pp)) {
 		printf("\n|-- %s%c\t", devname, DL_PARTNUM2NAME(i));
@@ -90,14 +90,11 @@ print_partition(const char *devname, const struct disklabel *dl, int i, int huma
 		printf("\t%8s", fstypenames[pp->p_fstype]);
 
 		dplen = asprintf(&dp, "/dev/%s%c", devname, DL_PARTNUM2NAME(i));
-		while (mntidx < mntsize && strncmp(mntbuf[mntidx].f_mntfromname, dp, dplen) == 0) {
-			if(fmt_scaled(mntbuf[mntidx].f_blocks * mntbuf[mntidx].f_bsize, sbuf) == -1)
-				err(1, "%s: fmt_scaled()", __func__);
-
-			printf("\t%s",
-			    mntbuf[mntidx].f_mntonname);
-			mntidx++;
-		}
+		
+		for (j = 0; j < mntsize; j++) 
+			if (strncmp(mntbuf[j].f_mntfromname, dp, dplen) == 0)
+				printf("\t%s", mntbuf[j].f_mntonname);
+		free(dp);
 	}
 }
 
@@ -151,7 +148,6 @@ main(int argc, char *argv[])
 
 	if ((mntsize = getmntinfo(&mntbuf, MNT_WAIT)) == 0)
 		err(1, "%s: getmntinfo", __func__);
-	mntidx = 0;
 
 	if (argc == 1 && argv[0] != NULL) {
 		print_device(argv[0], human);
@@ -159,7 +155,7 @@ main(int argc, char *argv[])
 	}
 
 	if (human) {
-		printf("DISK     \t   TOTAL\t  FSTYPE\tMOUNT\n");
+		printf("DISK     \t  TOTAL\t  FSTYPE\tMOUNT\n");
 	} else {
 		printf("DISK     \t            TOTAL\t  FSTYPE\tMOUNT\n");
 	}
