@@ -41,8 +41,8 @@ static void
 usage(void)
 {
 	fprintf(stderr,
-	    "usage: disks\n"
-	    "       disks dev\n");
+	    "usage: disks [-h]\n"
+	    "       disks [-h] dev\n");
 	exit(1);
 }
 
