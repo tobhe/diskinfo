@@ -120,9 +120,10 @@ print_device(char *devname, int human)
 	if (ioctl(dev, DIOCGDINFO, &dl) == -1)
 		err(1, "%s: ioctl(DIOCGDINFO)", __func__);
 
-	printf("%s:", devname);
-	if (!isduid(devname, OPENDEV_PART)) {
-		printf("%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx",
+	printf("%s", devname);
+	const uint8_t duid_zero[8] = { 0, 0, 0, 0, 0, 0, 0, 0};
+	if (!isduid(devname, OPENDEV_PART) && (memcmp(dl.d_uid, duid_zero, sizeof(duid_zero)) != 0)) {
+		printf(":%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx",
 		    dl.d_uid[0], dl.d_uid[1], dl.d_uid[2], dl.d_uid[3],
 		    dl.d_uid[4], dl.d_uid[5], dl.d_uid[6], dl.d_uid[7]);
 	}
