@@ -1,0 +1,42 @@
+DISKINFO(1)		    General Commands Manual		   DISKINFO(1)
+
+NAME
+     diskinfo - display disk information
+
+SYNOPSIS
+     diskinfo [-h]
+     diskinfo [-h] disk
+
+DESCRIPTION
+     The diskinfo utility displays information about all available or the
+     specified disk device.  The disk operand can be a "short form" name or
+     disklabel(8) UID.	If no operands are specified, information for all
+     available disks is displayed.  By default, size values are displayed as
+     512-byte block counts.
+
+     The options are as follows:
+
+     -h	     "Human-readable" output.  Use unit suffixes: Byte, Kilobyte,
+	     Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte in order to
+	     reduce the number of digits to four or less.
+
+EXAMPLES
+     Output information for all available disks:
+
+     # diskinfo
+     DISK		     TOTAL	FSTYPE	    MOUNT
+     sd0:e0da951523552d12 [QEMU QEMU HARDDISK]
+     |-- sd0a		 976240591	  RAID
+     |-- sd0c		 976773168	unused
+     `-- sd0i		    532480	 MSDOS
+
+     sd1:61992282be82044b [QEMU QEMU CRYPTO]
+     |-- sd1a		   2097152	4.2BSD	    /
+     |-- sd1b		  67461472	  swap
+     |-- sd1c		 976240063	unused
+     `-- sd1i		    532480	 MSDOS
+
+SEE ALSO
+     disklabel(5), mount(8), getmntinfo(3), sd(4), fstab(5),
+
+OpenBSD 7.8		       November 21, 2025		   DISKINFO(1)

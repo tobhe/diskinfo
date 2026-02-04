@@ -29,7 +29,7 @@
 .Sh DESCRIPTION
 The
 .Nm
-utility displays information about the specified
+utility displays information about all available or the specified
 .Ar disk
 device.
 The
@@ -55,17 +55,17 @@ Output information for all available disks:
 .Pp
 .Bd -literal
 # diskinfo
-DISK                        TOTAL         FSTYPE        MOUNT
+DISK                    TOTAL      FSTYPE      MOUNT
 sd0:e0da951523552d12 [QEMU QEMU HARDDISK]
-|-- sd0a	      976240591	   RAID
-|-- sd0c	      976773168	 unused
-`-- sd0i	         532480	  MSDOS
+|-- sd0a	    976240591	     RAID  
+|-- sd0c	    976773168	   unused  
+`-- sd0i	       532480	    MSDOS  
 
-sd1:61992282be82044b [QEMU QEMU CRYPTO]
-|-- sd1a	        2097152	 4.2BSD	/
-|-- sd1b	       67461472	   swap
-|-- sd1c	      976240063	 unused
-`-- sd1i	         532480	  MSDOS
+sd1:61992282be82044b [QEMU QEMU CRYPTO]  
+|-- sd1a	      2097152	   4.2BSD      /
+|-- sd1b	     67461472	     swap  
+|-- sd1c	    976240063	   unused  
+`-- sd1i	       532480	    MSDOS  
 .ed
 .Sh SEE ALSO
 .Xr disklabel 5 ,
